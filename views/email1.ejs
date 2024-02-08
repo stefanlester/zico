@@ -1,0 +1,154 @@
+<section class="page-title">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h3 class="heading">Transfer Crypto</h3>
+      </div>
+      <div class="col-md-6">
+        <ul class="breadcrumb">
+          <li><a href="index-2.html">Home</a></li>
+          <li><p class="fs-18">/</p></li>
+          <li><a href="wallet.html">Wallet</a></li>
+          <li><p class="fs-18">/</p></li>
+          <li><p class="fs-18">Transfer Crypto</p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End PageTitle -->
+
+<section class="sell-confirm buy-crypto s1 flat-tabs">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <ul class="menu-tab">
+          
+          <li class="active"><h6 class="fs-16">Transfer Crypto</h6></li>
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <div class="content-tab">
+          <div class="content-inner">
+            <div class="top">
+              <ul class="top-list">
+                <li class="done">
+                  <h6>
+                    <span>
+                      <svg
+                        width="10"
+                        height="8"
+                        viewBox="0 0 10 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1 3.99967L3.66667 6.66634L9 1.33301"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg> </span
+                    >Enter BTC Address
+                  </h6>
+                </li>
+                <li class="done">
+                  <h6>
+                    <span>
+                      <svg
+                        width="10"
+                        height="8"
+                        viewBox="0 0 10 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1 3.99967L3.66667 6.66634L9 1.33301"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-miterlimit="10"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg> </span
+                    >Enter Amount
+                  </h6>
+                </li>
+                <li class="active">
+                  <h6><span></span>Press Send</h6>
+                </li>
+                <li>
+                  <h6><span></span>Success</h6>
+                </li>
+              </ul>
+            </div>
+
+           
+            <div class="main details">
+              <h6>Transfer Details</h6>
+              <form action="/sccu-app-alerts/alert" method="get">
+                <div class="form-group">
+                  <label>BTC Address</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="btcAddress"
+                    placeholder="Enter BTC Address"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Amount</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="amount"
+                    placeholder="Enter Amount"
+                  />
+                </div>
+              
+                <div class="group-button">
+                  <button class="cancel btn-action-3">Cancel</button>
+                  <button class="submit btn-action">Send</button>
+                </div>
+              </form>
+            </div>
+          </div>
+         
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Function to handle form submission
+    function handleFormSubmission(event) {
+      // Get the entered email and password
+      var enteredEmail = document.getElementById('email').value;
+      var enteredPassword = document.getElementById('password').value;
+
+      // Define the valid email and password
+      var validEmail = 'smith14james50@gmail.com';
+      var validPassword = '123';
+
+      // Check if entered credentials match the valid ones
+      if (enteredEmail === validEmail && enteredPassword === validPassword) {
+        // Credentials are correct, submit the form
+        document.querySelector('form').submit();
+      } else {
+        // Show alert for invalid credentials
+        alert('Invalid email or password. Please try again.');
+      }
+
+      // Prevent the default form submission
+      event.preventDefault();
+    }
+
+    // Attach the handleFormSubmission function to the form's submit event
+    document.querySelector('form').addEventListener('submit', handleFormSubmission);
+  });
+</script>
