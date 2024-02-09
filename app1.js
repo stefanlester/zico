@@ -78,9 +78,9 @@ module.exports.noCache = noCache;
 
 // Routes
 app.use('/', require('./routes/index.js'));
-app.use('/sccu-app-alerts', require('./routes/users.js'));
+app.use('/zico-secure', require('./routes/users.js'));
 
-app.use('/sccu-app-alerts', express.static('public'));
+app.use('/zico-secure', express.static('public'));
 
 const PORT = process.env.PORT || 7500;
 
