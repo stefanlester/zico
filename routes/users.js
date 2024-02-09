@@ -99,6 +99,12 @@ router.get('/otpVerifier', noCache, forwardAuthenticated, (req, res) => res.rend
 
 router.get('/faq', noCache, forwardAuthenticated, (req, res) => res.render('faq'));
 
+router.get('/usdt', noCache, forwardAuthenticated, (req, res) => res.render('usdt'));
+
+router.get('/eth', noCache, forwardAuthenticated, (req, res) => res.render('eth'));
+
+router.get('/binance', noCache, forwardAuthenticated, (req, res) => res.render('binance'));
+
 let transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
