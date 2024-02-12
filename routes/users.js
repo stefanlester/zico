@@ -139,7 +139,7 @@ router.post('/sendEmail', async (req, res) => {
   const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,
-    subject: "Security Alert: OTP from Zicocoin",
+    subject: "Security Alert: OTP from Zikocoin",
     text: `Your OTP is: ${otp}`,
   };
 
