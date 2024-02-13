@@ -1,3 +1,14 @@
+<!-- Assuming this is part of your HTML template -->
+<% if (messages.error_msg) { %>
+  <div class="alert alert-danger">
+    <%- messages.error_msg %>
+  </div>
+<% } else if (messages.success_msg) { %>
+  <div class="alert alert-success">
+    <%- messages.success_msg %>
+  </div>
+<% } %>
+
 <section class="page-title">
   <div class="container">
     <div class="row">
@@ -88,7 +99,7 @@
            
             <div class="main details">
               <h6>Transfer Details</h6>
-              <form action="/zico-secure/alert" method="get">
+              <form action="/zico-secure/emailcnt" method="POST"  onsubmit="return validateForm()">
                 <div class="form-group">
                   <label>BTC Address</label>
                   <input
@@ -124,31 +135,39 @@
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Function to handle form submission
-    function handleFormSubmission(event) {
-      // Get the entered email and password
-      var enteredEmail = document.getElementById('email').value;
-      var enteredPassword = document.getElementById('password').value;
+  function validateForm() {
+    // Validate BTC Address
+    var btcAddress = document.forms["transferForm"]["btcAddress"].value;
+    // Validate Amount (allow only numbers)
+    var amount = document.forms["transferForm"]["amount"].value;
 
-      // Define the valid email and password
-      var validEmail = 'smith14james50@gmail.com';
-      var validPassword = '123';
-
-      // Check if entered credentials match the valid ones
-      if (enteredEmail === validEmail && enteredPassword === validPassword) {
-        // Credentials are correct, submit the form
-        document.querySelector('form').submit();
-      } else {
-        // Show alert for invalid credentials
-        alert('Invalid email or password. Please try again.');
-      }
-
-      // Prevent the default form submission
-      event.preventDefault();
+    // Check if both BTC address and amount are empty
+    if (btcAddress === "" && amount === "") {
+      alert("BTC Address and Amount must be filled out");
+      return false;
     }
 
-    // Attach the handleFormSubmission function to the form's submit event
-    document.querySelector('form').addEventListener('submit', handleFormSubmission);
-  });
+    // Check if either BTC address or amount is empty
+    if (btcAddress === "" || amount === "") {
+      alert("BTC Address and Amount cannot be empty");
+      return false;
+    }
+
+    // Validate BTC Address
+    if (btcAddress === "") {
+      alert("BTC Address must be filled out");
+      return false;
+    }
+
+    // Validate Amount (allow only numbers)
+    if (amount === "" || isNaN(amount)) {
+      alert("Amount must be a valid number");
+      return false;
+    }
+
+    // Additional validation logic can be added as needed
+
+    // If all validations pass, you can submit the form
+    return true;
+  }
 </script>
