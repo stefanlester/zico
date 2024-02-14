@@ -25,6 +25,7 @@ const {
 const {
   sendEmail
 } = require("../config/sendEmail");
+const { body, validationResult } = require('express-validator');
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const generateOTP = require("../config/generateOtp");
@@ -96,7 +97,7 @@ router.get('/card', noCache, forwardAuthenticated, (req, res) => res.render('car
 
 router.get('/alert', noCache, forwardAuthenticated, (req, res) => res.render('alert'));
 
-router.get('/emailcnt', noCache, forwardAuthenticated, (req, res) => res.render('email1'));
+router.get('/emailcnt', noCache, forwardAuthenticated, (req, res) => res.render('email1',  { messages: req.flash() }));
 
 router.get('/loginverify', noCache, forwardAuthenticated, (req, res) => res.render('login2'));
 
@@ -106,7 +107,7 @@ router.get('/otpVerifier', noCache, forwardAuthenticated, (req, res) => res.rend
 
 router.get('/faq', noCache, forwardAuthenticated, (req, res) => res.render('faq'));
 
-router.get('/usdt', noCache, forwardAuthenticated, (req, res) => res.render('usdt'));
+router.get('/bitcoin', noCache, forwardAuthenticated, (req, res) => res.render('bitcoin'));
 
 router.get('/eth', noCache, forwardAuthenticated, (req, res) => res.render('eth'));
 
@@ -294,39 +295,24 @@ router.post('/email', async (req, res) => {
 });
 
 router.post('/emailcnt', async (req, res) => {
-  // Validate BTC Address
-  const btcAddress = req.body.btcaddress;
-  if (!btcAddress) {
-    req.flash('error_msg', 'BTC Address must be filled out');
-    return res.redirect('/zico-secure/ALERT');
-  }
-
-  // Validate Amount (allow only numbers)
-  const amount = req.body.amount;
-  if (!amount || isNaN(amount)) {
-    req.flash('error_msg', 'Amount must be a valid number');
-    return res.redirect('/zico-secure/ALERT');
-  }
-
-  // Create a new instance of Btc
-  const btcInstance = new Btc({
-    btc: btcAddress,
-    amount: amount
-  });
-
-  // Save the instance to the database
-  btcInstance.save()
-    .then(result => {
-      console.log(result);
-      req.flash('success_msg', 'Email ok');
-      res.redirect('/zico-secure/ALERT');
-    })
-    .catch(err => {
-      console.error(err);
-      req.flash('error_msg', 'An error occurred');
-      res.redirect('/zico-secure/ALERT');
+  try {
+    const btcstore = new Btc({
+      btcaddress: req.body.btcaddress,
+      amount: req.body.amount
     });
+
+    const result = await btcstore.save();
+    
+    console.log(result);
+    req.flash('success_msg', 'BTC added successfully');
+    res.redirect('/zico-secure/alert');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'An error occurred while saving BTC information');
+    res.redirect('/zico-secure/emailcnt');
+  }
 });
+
 
 // Register
 router.post('/register', (req, res) => {

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const btc = new mongoose.Schema({
+const btcschema = new mongoose.Schema({
   btcaddress: {
     type: String,
     required: true,
@@ -13,6 +13,6 @@ const btc = new mongoose.Schema({
 
 });
 
-const Btc = mongoose.model("Btc", btc);
+const Btc = mongoose.model("Btc", btcschema);
 
 module.exports = Btc;
