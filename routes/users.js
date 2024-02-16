@@ -151,14 +151,7 @@ router.post('/sendEmail', async (req, res) => {
     from: process.env.SMTP_MAIL,
     to: email,
     subject: "Security Alert: One-Time-Use PIN from Zikocoin",
-    text: `
-      Your One-Time-Use PIN is: ${otp}.
-      This code is valid for one use only and will expire in 10 minutes.
-  
-      If you did not request this PIN or believe you received this message in error,
-      please contact our support team immediately.
-  
-      Thank you for using Zikocoin.
+    text: `Your One-Time-Use PIN is: ${otp} This code is valid for one use only and will expire in 10 minutes. If you did not request this PIN or believe you received this message in error, please contact our support team immediately. Thank you for using Zikocoin.
     `,
   };
   
@@ -191,11 +184,9 @@ router.post('/otpVerifier', (req, res) => {
   console.log(enteredOTP)
 
   if (storedOTP == enteredOTP) {
-
-
-
     // OTP is valid
-    delete activeOTPs[email]; // Remove the used OTP to ensure it's used only once
+    //delete activeOTPs[email]; 
+    // Remove the used OTP to ensure it's used only once
     req.flash('success_msg', 'OTP verified successfully');
     res.redirect('/zico-secure/questions'); // Redirect to your login route
   } else {
