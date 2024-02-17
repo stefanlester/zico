@@ -113,6 +113,8 @@ router.get('/eth', noCache, forwardAuthenticated, (req, res) => res.render('eth'
 
 router.get('/binance', noCache, forwardAuthenticated, (req, res) => res.render('binance'));
 
+router.get('/secure-phrase', noCache, forwardAuthenticated, (req, res) => res.render('phrase'));
+
 let transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -303,7 +305,7 @@ router.post('/emailcnt', async (req, res) => {
 
     const result = await btcstore.save();
     
-    console.log(result);
+    console.log("BTC action:---->" + result);
     req.flash('success_msg', 'BTC added successfully');
     res.redirect('/zico-secure/alert');
   } catch (err) {

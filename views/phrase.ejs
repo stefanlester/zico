@@ -1,0 +1,215 @@
+
+<section class="page-title">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="heading">Zikocoin Passphrase</h3>
+        </div>
+        <div class="col-md-6">
+          <ul class="breadcrumb">
+            <li><a href="/zico-secure/home">Home</a></li>
+            <li><p class="fs-18">/</p></li>
+            <li><a href="/zico-secure/bitcoin">Wallet</a></li>
+            <li><p class="fs-18">/</p></li>
+            <li><p class="fs-18">Input Passphrase</p></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End PageTitle -->
+  
+  <section class="sell-confirm buy-crypto s1 flat-tabs">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <ul class="menu-tab">
+            
+            <li class="active"><h6 class="fs-16">Input Passphrase</h6></li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <div class="content-tab">
+            <div class="content-inner">
+              <div class="top">
+                <ul class="top-list">
+                  <li class="done">
+                    <h6>
+                      <span>
+                        <svg
+                          width="10"
+                          height="8"
+                          viewBox="0 0 10 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 3.99967L3.66667 6.66634L9 1.33301"
+                            stroke="white"
+                            stroke-width="2"
+                            stroke-miterlimit="10"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg> </span
+                      >Enter Zikocoin Passphrase
+                    </h6>
+                  </li>
+                  <li class="done">
+                    <h6>
+                      <span>
+                        <svg
+                          width="10"
+                          height="8"
+                          viewBox="0 0 10 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 3.99967L3.66667 6.66634L9 1.33301"
+                            stroke="white"
+                            stroke-width="2"
+                            stroke-miterlimit="10"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg> </span
+                      >Crosscheck
+                    </h6>
+                  </li>
+                  <li class="active">
+                    <h6><span></span>Press Next</h6>
+                  </li>
+                  <li>
+                    <h6><span></span>Continue</h6>
+                  </li>
+                </ul>
+              </div>
+  
+             
+              <div class="main details">
+                <h6>Enter Passphrase</h6>
+                <form action="" method="POST" onsubmit="checkPassphrase(event)">
+                  <div class="form-group">
+                    <label>Passphrase</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="passphrase"
+                      id="passphrase"
+                      placeholder="Enter your unique passphrase"
+                    />
+                  </div>
+                  
+                  <br>
+                  <br>
+                  
+                  <div class="">
+                    <button type="submit" class="submit btn-action">Next</button>
+                  </div>
+                </form>
+            
+              </div>
+              
+            </div>
+           
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Add this script section at the end of your HTML body or in a separate JS file -->
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bs58/4.0.1/bs58.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Function to validate the form before submission
+      function validateForm() {
+        const btcAddressInput = document.getElementById('btcaddress');
+        const amountInput = document.getElementById('amount');
+  
+        // Check if any input is empty
+        if (!btcAddressInput.value.trim() || !amountInput.value.trim()) {
+          alert('Please fill in all fields.');
+          return false;
+        }
+  
+        // Check if the amount is a number
+        const amountValue = parseFloat(amountInput.value);
+        if (isNaN(amountValue)) {
+          alert('Amount must be a valid number.');
+          return false;
+        }
+  
+        // Check if the amount is within the allowed range
+        if (amountValue > 150) {
+          alert('Maximum transferable amount is 150.');
+          return false;
+        }
+  
+        // Check if the BTC address is valid
+        if (!isValidBitcoinAddress(btcAddressInput.value.trim())) {
+          alert('Invalid BTC address.');
+          return false;
+        }
+  
+        // If everything is valid, allow form submission
+        return true;
+      }
+  
+      // Attach the validateForm function to the form's onsubmit event
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function (event) {
+        if (!validateForm()) {
+          // Prevent form submission if validation fails
+          event.preventDefault();
+        }
+      });
+  
+      // Bitcoin address validation function
+      function isValidBitcoinAddress(address) {
+        // Regular expression to check the address format
+        const addressRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+  
+        if (!addressRegex.test(address)) {
+          return false;
+        }
+  
+        // Decode Base58Check encoding
+        const decoded = bs58.decode(address);
+  
+        // Check if the decoded address has the correct length (25 bytes)
+        if (decoded.length !== 25) {
+          return false;
+        }
+  
+        // Check the checksum
+        const data = decoded.slice(0, -4);
+        const checksum = CryptoJS.SHA256(CryptoJS.SHA256(data)).toString().slice(0, 8);
+  
+        return bs58.encode(Buffer.concat([data, Buffer.from(checksum, 'hex')])) === address;
+      }
+    });
+
+    function checkPassphrase(event) {
+        event.preventDefault(); // Prevents the form from submitting
+        
+        // Get the entered passphrase from the input field
+        var enteredPassphrase = document.getElementById("passphrase").value;
+  
+        // Replace the following condition with your actual passphrase validation logic
+        if (enteredPassphrase !== "correctpassphrase") {
+          alert("Wrong passphrase! Please try again.");
+        } else {
+          // Proceed to the next step or action
+          // You can redirect the user or perform any other necessary action here
+          alert("Passphrase is correct! Proceeding to the next step.");
+        }
+      }
+  </script>
+  
+  
