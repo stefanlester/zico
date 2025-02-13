@@ -172,7 +172,7 @@ router.post('/sendEmail', async (req, res) => {
 });
 
 // Route for verifying OTP during login
-router.post('/otpVerifier', (req, res) => {
+router.post('/otpVerifier', (req, res) => {``
   const {
     email,
     enteredOTP

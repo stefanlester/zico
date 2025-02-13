@@ -1,5 +1,6 @@
-dbPassword = 'mongodb+srv://evereddyer914:Jefered50@cluster0.l5tlr1m.mongodb.net/SPACE_COAST?retryWrites=true&w=majority'
+dbPassword = "mongodb+srv://stefanAmoah:TqPMnXqSTZUN2SqY@cluster0.ty6cr.mongodb.net/bankDB?retryWrites=true&w=majority&appName=Cluster0"
 
 module.exports = {
     mongoURI: dbPassword
 };
+
